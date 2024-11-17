@@ -46,6 +46,13 @@ class RegistrarTest {
         assertEquals(List.of(sally), comp127.getRoster());
     }
 
+    @Test
+    void clientsCannotModifyCourses() {
+       List<Course> courses = sally.getCourses();
+       courses.add(comp127);
+    }
+
+
     // ------ Enrollment limits ------
 
     @Test
