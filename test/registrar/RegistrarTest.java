@@ -46,12 +46,6 @@ class RegistrarTest {
         assertEquals(List.of(sally), comp127.getRoster());
     }
 
-    @Test
-    void clientsCannotModifyCourses() {
-       List<Course> courses = sally.getCourses();
-       courses.add(comp127);
-    }
-
 
     // ------ Enrollment limits ------
 
@@ -83,8 +77,10 @@ class RegistrarTest {
 
     @Test
     void clientsCannotModifyCourses() {
-       sally.getCourses().add(comp127);
+       List<Course> courses = sally.getCourses();
+       courses.add(comp127);
     }
+
 
     // ------ Post-test invariant check ------
     //
