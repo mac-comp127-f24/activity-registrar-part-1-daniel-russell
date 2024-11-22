@@ -1,6 +1,7 @@
 package registrar;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,14 +37,38 @@ class RegistrarTest {
 
     @Test
     void studentStartsInNoCourses() {
-        assertEquals(List.of(), sally.getCourses());
+        assertEquals(Set.of(), sally.getCourses());
     }
 
     @Test
     void studentCanEnroll() {
         sally.enrollIn(comp127);
-        assertEquals(List.of(comp127), sally.getCourses());
-        assertEquals(List.of(sally), comp127.getRoster());
+        assertEquals(Set.of(comp127), sally.getCourses());
+        assertEquals(Set.of(sally), comp127.getRoster());
+    }
+
+    @Test
+    void studentCannotEnrollMoreThanOnce() {
+        basketWeaving101.setEnrollmentLimit(15);
+        for (int n = 0; n < 15; n++) {
+            fred.enrollIn(basketWeaving101);
+        }
+        int nameCount = 0;
+        int courseCount = 0;
+        for (Student s : basketWeaving101.getRoster()) {
+            if (s.equals(fred)) {
+                nameCount++;
+            }
+        }
+
+        for (Course c : fred.getCourses()) {
+            if (c.equals(basketWeaving101)) {
+               courseCount++; 
+            }
+        }
+
+        assertEquals(1, nameCount);
+        assertEquals(1, courseCount);
     }
 
 
@@ -74,6 +99,21 @@ class RegistrarTest {
         assertFalse(sally.enrollIn(comp127));
         assertFalse(comp127.getRoster().contains(sally));
     }
+
+    @Test
+    void clientsCannotModifyCourses() {
+       assertThrows(UnsupportedOperationException.class, () -> {
+            sally.getCourses().add(comp127);
+       });
+    }
+
+    @Test
+    void clientsCannotModifyRoster() {
+        assertThrows(UnsupportedOperationException.class, () -> {
+            comp127.getRoster().add(zongo);
+        });
+    }
+
 
     // ------ Post-test invariant check ------
     //
